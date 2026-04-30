@@ -1,12 +1,12 @@
 import traceback
-from dotenv import load_dotenv
 
-print("Starting app...")
+print("🚀 Starting app...")
 
 try:
     from fastapi import FastAPI
     from backend.routes.chat import router
     from fastapi.middleware.cors import CORSMiddleware
+    from dotenv import load_dotenv
 
     load_dotenv()
 
@@ -26,8 +26,8 @@ try:
     def home():
         return {"message": "AI Assistant Running"}
 
-    print("✅ App initialized successfully")
+    print("✅ App initialized")
 
-except Exception as e:
-    print("❌ STARTUP ERROR:")
+except Exception:
+    print("❌ FULL ERROR BELOW:")
     traceback.print_exc()
