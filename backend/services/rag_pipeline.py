@@ -7,8 +7,6 @@ import logging
 
 logging.basicConfig(level=logging.INFO)
 
-retriever = get_retriever()
-
 
 # ✅ Safe JSON parser
 def safe_json(text):
@@ -41,14 +39,20 @@ def get_answer(query: str):
     try:
         logging.info(f"Query: {query}")
 
-        # 🔹 Step 1: Retrieve documents
-        docs = retriever.invoke(query)
+        # 🔥 FIX: Load retriever ONLY when needed
+        retriever = get_retriever()
 
-        if docs:
-            context = "\n\n".join([doc.page_content for doc in docs[:6]])
+        if retriever is None:
+            logging.warning("Retriever not available, using web fallback")
+        else:
+            # 🔹 Step 1: Retrieve documents
+            docs = retriever.invoke(query)
 
-            # 🔹 Step 2: Relevance check
-            relevance_prompt = f"""
+            if docs:
+                context = "\n\n".join([doc.page_content for doc in docs[:6]])
+
+                # 🔹 Step 2: Relevance check
+                relevance_prompt = f"""
 Answer ONLY YES or NO.
 
 Context:
@@ -58,13 +62,13 @@ Question: {query}
 
 Is this context useful?
 """
-            relevance = generate_response(relevance_prompt) or ""
-            logging.info(f"Relevance: {relevance}")
+                relevance = generate_response(relevance_prompt) or ""
+                logging.info(f"Relevance: {relevance}")
 
-            if relevance.strip().upper().startswith("YES"):
+                if relevance.strip().upper().startswith("YES"):
 
-                # 🔥 IMPROVED PROMPT (MAIN FIX)
-                prompt = f"""
+                    # 🔥 Main answer prompt
+                    prompt = f"""
 You are a medical assistant.
 
 Give a DETAILED and structured answer.
@@ -88,10 +92,10 @@ Return ONLY JSON:
 }}
 """
 
-                llm_output = generate_response(prompt)
-                logging.info(f"LLM (doc): {llm_output}")
+                    llm_output = generate_response(prompt)
+                    logging.info(f"LLM (doc): {llm_output}")
 
-                return safe_json(llm_output)
+                    return safe_json(llm_output)
 
         # 🔥 Step 3: Web fallback
         logging.info("Using web fallback")
