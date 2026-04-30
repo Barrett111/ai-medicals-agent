@@ -1,5 +1,6 @@
 from langchain_community.vectorstores import FAISS
 from backend.services.embeddings import get_embeddings
+
 def load_vector_store():
     print("🔄 Loading vector store...")
     embeddings = get_embeddings()
@@ -12,3 +13,8 @@ def load_vector_store():
 
     print("✅ Vector store loaded")
     return db
+
+
+def get_retriever():
+    db = load_vector_store()
+    return db.as_retriever(search_kwargs={"k": 3})
