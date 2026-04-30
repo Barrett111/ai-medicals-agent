@@ -1,6 +1,7 @@
 from langchain_community.vectorstores import FAISS
 from backend.services.embeddings import get_embeddings
 
+
 def load_vector_store():
     print("🔄 Loading vector store...")
     embeddings = get_embeddings()
