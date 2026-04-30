@@ -21,3 +21,5 @@ app.include_router(router, prefix="/chat")
 @app.get("/")
 def home():
     return {"message": "AI Assistant Running"}
+
+print("App starting...")
