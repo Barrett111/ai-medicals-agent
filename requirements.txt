@@ -7,6 +7,5 @@ faiss-cpu
 langchain
 langchain-huggingface
 ddgs
-transformers
 huggingface-hub
 sentence-transformers
