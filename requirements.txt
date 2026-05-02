@@ -5,7 +5,5 @@ python-dotenv
 langchain-community
 faiss-cpu
 langchain
-langchain-huggingface
 ddgs
-huggingface-hub
-sentence-transformers
+
